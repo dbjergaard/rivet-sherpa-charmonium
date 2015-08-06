@@ -1,0 +1,59 @@
+Main:numberOfEvents = 10000
+
+Next:numberShowLHA = 1 ! print LHA information n times
+Next:numberShowInfo = 1 ! print event information n times
+Next:numberShowProcess = 1 ! print process record n times
+Next:numberShowEvent = 1 ! print event record n times
+Stat:showPartonLevel = on ! additional statistics on MPI
+
+Beams:eCM = 7000.
+Random:setSeed = on
+
+! PartonLevel:MPI = off 
+! PartonLevel:ISR = off 
+! PartonLevel:FSR = off 
+HadronLevel:Hadronize = off 
+! HardQCD:all = off
+! SoftQCD:all = off
+ParticleDecays:mixB = off
+PhaseSpace:pTHatMin = 45
+PhaseSpace:pTHatMinDiverge = 0.5
+
+443:onMode = off
+100443:onMode = off 
+
+443:onIfAny = 13
+100443:onIfAny = 13 
+
+!! Color singlet processes
+! Charmonium:gg2ccbar(3S1)[3S1(1)]g = on,on
+! Charmonium:gg2ccbar(3S1)[3S1(1)]g = on,on
+
+! Charmonium:gg2ccbar(3PJ)[3PJ(1)]g = on,on,on
+! Charmonium:qg2ccbar(3PJ)[3PJ(1)]q = on,on,on
+! Charmonium:qqbar2ccbar(3PJ)[3PJ(1)]g = on,on,on
+
+! Charmonium:gg2ccbar(3DJ)[3DJ(1)]g = on
+
+!! Color octet processes
+! Charmonium:gg2ccbar(3S1)[3S1(8)]g = on,on
+! Charmonium:qg2ccbar(3S1)[3S1(8)]q = on,on
+! Charmonium:qqbar2ccbar(3S1)[3S1(8)]g = on,on
+! Charmonium:gg2ccbar(3S1)[3S1(8)]g = on,on
+! Charmonium:qg2ccbar(3S1)[3S1(8)]q = on,on
+! Charmonium:qqbar2ccbar(3S1)[3S1(8)]g = on,on
+! Charmonium:gg2ccbar(3S1)[1S0(8)]g = on,on
+! Charmonium:qg2ccbar(3S1)[1S0(8)]q = on,on
+! Charmonium:qqbar2ccbar(3S1)[1S0(8)]g = on,on
+
+Charmonium:gg2ccbar(3S1)[3PJ(8)]g = on,on
+Charmonium:qg2ccbar(3S1)[3PJ(8)]q = on,on
+Charmonium:qqbar2ccbar(3S1)[3PJ(8)]g = on,on
+
+! Charmonium:gg2ccbar(3PJ)[3S1(8)]g = on,on,on
+! Charmonium:qg2ccbar(3PJ)[3S1(8)]q = on,on,on
+! Charmonium:qqbar2ccbar(3PJ)[3S1(8)]g = on,on,on
+
+! Charmonium:gg2ccbar(3DJ)[3PJ(8)]g = on
+! Charmonium:qg2ccbar(3DJ)[3PJ(8)]q = on
+! Charmonium:qqbar2ccbar(3DJ)[3PJ(8)]g = on
