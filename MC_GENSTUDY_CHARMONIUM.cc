@@ -34,7 +34,7 @@ typedef std::map<std::string,Rivet::Histo1DPtr> BookedHistos;
 template <typename lvec> static void dump4vec(lvec four_mom){
   std::cout<<"( "<<four_mom.pt()<<" [GeV], "<<four_mom.eta()<<", "<<four_mom.phi()<<", "<<four_mom.m()<<" [GeV])"<<std::endl;
 }
-/*
+
 static void getAngle(const double& eta, const double& phi, 
 		     const double& tmag, const double& ttheta,
 		     double& theta){
@@ -45,7 +45,7 @@ static void getAngle(const double& eta, const double& phi,
   theta=acos( x );
   return;
 }
-*/
+
 namespace Rivet {
 
 
@@ -72,10 +72,11 @@ namespace Rivet {
     void init() {
 
       // Projections
-      const FinalState fs(-2.5, 2.5, 500*MeV);
+      const FinalState fs(-4.2, 4.2, 500*MeV);
       addProjection(fs, "FS");
       const ChargedFinalState cfs(-2.5, 2.5, 500*MeV);
       addProjection(cfs, "CFS");
+      /*
       IdentifiedFinalState muonfs(fs);
       muonfs.acceptIdPair(13);
       IdentifiedFinalState nufs(fs);
@@ -85,7 +86,7 @@ namespace Rivet {
       
       VetoedFinalState caloParts(FinalState(-4.2,4.2));
       caloParts.addVetoOnThisFinalState(muAndNu);
-      
+      */
       ChargedLeptons lfs(fs);
       addProjection(lfs, "LFS");
       FastJets JetProjection(cfs,FastJets::ANTIKT, jetR);
@@ -128,11 +129,11 @@ namespace Rivet {
       }
       cutFlow["JPsiCand"]++;
       const FastJets& jetProj = applyProjection<FastJets>(event, "Jets");
-      const PseudoJets jets = jetProj.pseudoJetsByPt(45*GeV);
+      const Jets jets = jetProj.jetsByPt(20*GeV);
       if(jets.size() < 2){
       	vetoEvent;
       }
-      cutFlow["GreaterThan1Jets"]++;
+      cutFlow["GreaterThan2Jets"]++;
       _histograms["JetMult"]->fill(jets.size(),weight);
       if(j_psi.pt() < 20*GeV){
       	vetoEvent;
@@ -142,30 +143,46 @@ namespace Rivet {
       _histograms["JPsiEta"]->fill(j_psi.eta(),weight);
       _histograms["JPsiPt"]->fill(j_psi.pt(),weight);
       _histograms["JPsiM"]->fill(j_psi.mass(),weight);
-      fastjet::PseudoJet charmJet;
+      Jet charmJet;
+      
       double delR(99.);
       double candDelR(99.);
-      foreach(const fastjet::PseudoJet& j, jets){
-      	delR=deltaR(FourMomentum(j.e(),j.px(),j.py(),j.pz()), j_psi);
+      foreach(const Jet& j, jets){
+      	delR=deltaR(j.mom(), j_psi);
       	if( delR < jetR && delR < candDelR) {
       	  charmJet=j;
       	  candDelR=delR;
       	}
       }
-      if(isinf(deltaR(FourMomentum(charmJet.e(),
-      				   charmJet.px(),
-      				   charmJet.py(),
-      				   charmJet.pz()),j_psi))){
+      /*
+      foreach(const Particle& p, charmJet.particles()){
+	if(abs(p.pid())==13){
+	  cout <<"Jet Contains muons!"<<endl;
+	}
+	if(abs(p.pid())==443){
+	  cout <<"Jet Contains J/Psi!"<<endl;
+	}
+      }
+      */
+      if(isinf(deltaR(charmJet.mom(),j_psi))){
       	vetoEvent;
       }
       cutFlow["charmJetMatch"]++;
-      fastjet::PseudoJet parton=jets.at(0);
-      if(parton.m2()==charmJet.m2()){
+      Jet parton=jets.at(0);
+      if(parton.mom()==charmJet.mom()){
       	parton=jets.at(1);
       }
-      fillJetHistos("Jet",charmJet,parton,j_psi,*jetProj.clusterSeq(),weight); 
+      if(!parton.pseudojet().has_structure()){
+	MSG_DEBUG("Warning: parton does not have associated PseudoJet structure, skipping Event");
+	vetoEvent;
+      }
+      if(!charmJet.pseudojet().has_structure()){
+	MSG_DEBUG("Warning: charmJet does not have associated PseudoJet structure, skipping Event");
+	vetoEvent;
+      }
+      fillJetHistos("Jet",charmJet.pseudojet(),parton.pseudojet(),j_psi,*jetProj.clusterSeq(),weight); 
     }
-
+    
     /// Finalize
     void finalize() {
       cout<<"Cut flow"<<endl;
@@ -208,11 +225,11 @@ namespace Rivet {
       _histograms[key+"PMag"]		 = bookHisto1D(key+"PMag" ,50,0,0.06);
       _histograms[key+"PTheta"]		 = bookHisto1D(key+"PTheta" ,50,-PI,PI);
 
-      // _histograms[key+"PMagJPsi"]	 = bookHisto1D(key+"PMagJPsi" ,50,0,0.06);
-      // _histograms[key+"PThetaJPsi"]      = bookHisto1D(key+"PThetaJPsi" ,50,0.,PI);
+      _histograms[key+"PMagJPsi"]	 = bookHisto1D(key+"PMagJPsi" ,50,0,0.06);
+      _histograms[key+"PThetaJPsi"]      = bookHisto1D(key+"PThetaJPsi" ,50,0.,PI);
 
-      // _histograms[key+"PMagPtn"]	 = bookHisto1D(key+"PMagPtn" ,50,0,0.06);
-      // _histograms[key+"PThetaPtn"]       = bookHisto1D(key+"PThetaPtn" ,50,0.,PI);
+      _histograms[key+"PMagPtn"]	 = bookHisto1D(key+"PMagPtn" ,50,0,0.06);
+      _histograms[key+"PThetaPtn"]       = bookHisto1D(key+"PThetaPtn" ,50,0.,PI);
 
       _histograms[key+"PtclMult"]	 = bookHisto1D(key+"PtclMult",41,-0.5,40.5);
       // N sub-jettiness
@@ -252,13 +269,13 @@ namespace Rivet {
       std::vector<double> pull=JetPull(jet);
       _histograms[key+"PMag"]->fill(pull.at(0),weight);
       _histograms[key+"PTheta"]->fill(pull.at(1),weight);
-      // if(pull.at(0)!=0){
-      // 	double theta=-99.;
-      // 	getAngle(j_psi.eta(),j_psi.phi(),pull.at(0),pull.at(1),theta);
-      // 	_histograms[key+"PThetaJPsi"]->fill(theta,weight);
-      // 	getAngle(parton.eta(),parton.phi(),pull.at(0),pull.at(1),theta);
-      // 	_histograms[key+"PThetaPtn"]->fill(theta,weight);
-      // }
+      if(pull.at(0)!=0){
+      	double theta=-99.;
+      	getAngle(j_psi.eta(),j_psi.phi(),pull.at(0),pull.at(1),theta);
+      	_histograms[key+"PThetaJPsi"]->fill(theta,weight);
+      	getAngle(parton.eta(),parton.phi(),pull.at(0),pull.at(1),theta);
+      	_histograms[key+"PThetaPtn"]->fill(theta,weight);
+      }
       _histograms[key+"PtnDeltaPhi"]->fill(mapAngle0To2Pi(j_psi.phi()-parton.phi()),weight);
       _histograms[key+"DeltaPhi"]->fill(mapAngle0To2Pi(j_psi.phi()-jet.phi()),weight);
 

@@ -18,11 +18,11 @@
 }(processes)
 
 (selector){
-  PT 93   1. E_CMS
+  PT 93 45.0 E_CMS
 }(selector)
 
 (analysis){
   BEGIN_RIVET {
-     -a MC_GENSTUDY_CHARMONIUM
+     -a MC_GENSTUDY_CHARMONIUM 
   } END_RIVET
 }(analysis)
