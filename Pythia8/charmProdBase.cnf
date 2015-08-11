@@ -16,7 +16,7 @@ HadronLevel:Hadronize = off
 ! HardQCD:all = off
 ! SoftQCD:all = off
 ParticleDecays:mixB = off
-PhaseSpace:pTHatMin = 5
+PhaseSpace:pTHatMin = 45
 PhaseSpace:pTHatMinDiverge = 0.5
 
 443:onMode = off
