@@ -23,6 +23,6 @@
 
 (analysis){
   BEGIN_RIVET {
-     -a MC_GENSTUDY_CHARMONIUM ATLAS_2011_S9035664
+     -a MC_GENSTUDY_CHARMONIUM
   } END_RIVET
 }(analysis)
