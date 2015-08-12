@@ -10,10 +10,18 @@ CFLAGS= -g3 -fno-inline -I$(INCDIR) $(RIVETINCDIR) -pedantic -ansi $(WFLAGS) -O0
 
 .PHONY: all
 # Code related rules
-all: rivet-lib Pythia8/pythia8
+all: rivet-lib #Pythia8/pythia8
 rivet-lib: RivetMC_GENSTUDY_CHARMONIUM.so libBOOSTFastJets.so
 Pythia8/pythia8: Pythia8/pythia8.o
 	$(CC) $^ -o $@ $(LDFLAGS) -lpythia8 -lHepMC
+Pythia8/pythia8185: Pythia8/pythia8185.o
+	$(CC) $^ -o $@ $(LDFLAGS) -lpythia8 -lpythia8tohepmc -lHepMC -L ${HOME}/rivet/local/Pythia8185/lib -L ${HOME}/rivet/local/Pythia8185/lib/archive -llhapdfdummy
+Pythia8/pythia8210: Pythia8/pythia8210.o
+	$(CC) $^ -o $@ $(LDFLAGS) -lpythia8 -lHepMC -L ${HOME}/rivet/local/Pythia8210/lib
+Pythia8/pythia8185.o: Pythia8/runPythia.C
+	$(CC) $(CFLAGS) -I${HOME}/rivet/local/Pythia8185/include -c $^ -o $@
+Pythia8/pythia8210.o: Pythia8/runPythia.C
+	$(CC) $(CFLAGS) -D__PYTHIA_8210__ -I${HOME}/rivet/local/Pythia8210/include -c $^ -o $@
 Pythia8/pythia8.o: Pythia8/runPythia.C
 	$(CC) $(CFLAGS) -c $^ -o $@
 RivetMC_GENSTUDY_CHARMONIUM.so:  MC_GENSTUDY_CHARMONIUM.cc libBOOSTFastJets.so

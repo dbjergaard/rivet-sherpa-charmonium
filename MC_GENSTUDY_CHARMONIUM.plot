@@ -135,6 +135,16 @@ LogY=1
 XLabel=$|\vec{t}_{Ptn}|$
 # END PLOT
 
+# BEGIN PLOT /MC_GENSTUDY_CHARMONIUM/JetPtnDeltaPhi$
+Title=  $\Delta \phi$(J/$\psi$,Parton)
+XLabel=$\Delta\phi$
+# END PLOT
+
+# BEGIN PLOT /MC_GENSTUDY_CHARMONIUM/JetDeltaPhi$
+Title=  $\Delta \phi$(J/$\psi$,Jet)
+XLabel=$\Delta\phi$
+# END PLOT
+
 # BEGIN PLOT /MC_GENSTUDY_CHARMONIUM/JetPMagJPsi$
 Title=  Anti-k$_{T}$ Jet Pull Magnitude $|\vec{t}_{J/\psi}|$ 
 LogY=1

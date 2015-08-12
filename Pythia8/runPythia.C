@@ -1,5 +1,9 @@
 #include "Pythia8/Pythia.h"
+#ifdef __PYTHIA_8210__
 #include "Pythia8Plugins/HepMC2.h"
+#else
+#include "Pythia8/Pythia8ToHepMC.h"
+#endif
 
 #include "HepMC/GenEvent.h"   
 #include "HepMC/IO_GenEvent.h"
@@ -116,6 +120,7 @@ int main(int argc, char* argv[]) {
 	 contains(requestedPdgId, -13))){
       continue;
     }
+    /*
     for(int i=0; i < pythia.event.size(); i++){
       if(abs(pythia.event[i].id())==9940003){
 	print_family_tree(pythia.event[i],pythia.event);
@@ -123,6 +128,7 @@ int main(int argc, char* argv[]) {
 	break;
       }
     }
+    */
     // print_family_tree( pythia.event[1], pythia.event);
 
     HepMC::GenEvent* hepmcevt = new HepMC::GenEvent(HepMC::Units::GEV, HepMC::Units::MM);
