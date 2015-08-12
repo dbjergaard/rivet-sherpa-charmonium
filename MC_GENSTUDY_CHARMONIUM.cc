@@ -129,7 +129,7 @@ namespace Rivet {
       }
       cutFlow["JPsiCand"]++;
       const FastJets& jetProj = applyProjection<FastJets>(event, "Jets");
-      const Jets jets = jetProj.jetsByPt(20*GeV);
+      const Jets jets = jetProj.jetsByPt(45*GeV);
       if(jets.size() < 2){
       	vetoEvent;
       }
