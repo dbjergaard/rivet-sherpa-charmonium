@@ -13,7 +13,7 @@ CFLAGS= -g3 -fno-inline -I$(INCDIR) $(RIVETINCDIR) -pedantic -ansi $(WFLAGS) -O0
 all: rivet-lib #Pythia8/pythia8
 rivet-lib: RivetMC_GENSTUDY_CHARMONIUM.so libBOOSTFastJets.so
 Pythia8/pythia8: Pythia8/pythia8.o
-	$(CC) $^ -o $@ $(LDFLAGS) -lpythia8 -lHepMC
+	$(CC) $^ -o $@ $(LDFLAGS) -lpythia8 -lHepMC -llhapdfdummy -lpythia8tohepmc
 Pythia8/pythia8185: Pythia8/pythia8185.o
 	$(CC) $^ -o $@ $(LDFLAGS) -lpythia8 -lpythia8tohepmc -lHepMC -L ${HOME}/rivet/local/Pythia8185/lib -L ${HOME}/rivet/local/Pythia8185/lib/archive -llhapdfdummy
 Pythia8/pythia8210: Pythia8/pythia8210.o

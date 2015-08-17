@@ -7,7 +7,6 @@
 
 // Rivet 
 #include "Rivet/Analysis.hh"
-#include "Rivet/Math/Math.hh"
 #include "Rivet/AnalysisLoader.hh"
 #include "Rivet/Tools/BinnedHistogram.hh"
 //#include "Rivet/RivetAIDA.hh"
@@ -76,7 +75,6 @@ namespace Rivet {
       addProjection(fs, "FS");
       const ChargedFinalState cfs(-2.5, 2.5, 500*MeV);
       addProjection(cfs, "CFS");
-      /*
       IdentifiedFinalState muonfs(fs);
       muonfs.acceptIdPair(13);
       IdentifiedFinalState nufs(fs);
@@ -86,7 +84,7 @@ namespace Rivet {
       
       VetoedFinalState caloParts(FinalState(-4.2,4.2));
       caloParts.addVetoOnThisFinalState(muAndNu);
-      */
+      
       ChargedLeptons lfs(fs);
       addProjection(lfs, "LFS");
       FastJets JetProjection(cfs,FastJets::ANTIKT, jetR);
@@ -99,7 +97,10 @@ namespace Rivet {
       _histograms["JPsiM"] = bookHisto1D("JPsiM" , 50, 2.95, 3.2);
       _histograms["JPsiEta"] = bookHisto1D("JPsiEta" , 25, -4.2, 4.2);
 
+
       bookJetHistos("Jet");
+      bookJetHistos("JetELo");
+      bookJetHistos("JetEHi");
     }
 
     /// Perform the per-event analysis
@@ -129,11 +130,11 @@ namespace Rivet {
       }
       cutFlow["JPsiCand"]++;
       const FastJets& jetProj = applyProjection<FastJets>(event, "Jets");
-      const Jets jets = jetProj.jetsByPt(45*GeV);
-      if(jets.size() < 2){
+      const PseudoJets jets = jetProj.pseudoJetsByPt(45*GeV);
+      if(jets.size() < 1){
       	vetoEvent;
       }
-      cutFlow["GreaterThan2Jets"]++;
+      cutFlow["GreaterThan1Jets"]++;
       _histograms["JetMult"]->fill(jets.size(),weight);
       if(j_psi.pt() < 20*GeV){
       	vetoEvent;
@@ -143,36 +144,36 @@ namespace Rivet {
       _histograms["JPsiEta"]->fill(j_psi.eta(),weight);
       _histograms["JPsiPt"]->fill(j_psi.pt(),weight);
       _histograms["JPsiM"]->fill(j_psi.mass(),weight);
-      Jet charmJet;
-      
+      fastjet::PseudoJet charmJet;
       double delR(99.);
       double candDelR(99.);
-      foreach(const Jet& j, jets){
-      	delR=deltaR(j.mom(), j_psi);
+      foreach(const fastjet::PseudoJet& j, jets){
+      	delR=deltaR(FourMomentum(j.e(),j.px(),j.py(),j.pz()), j_psi);
       	if( delR < jetR && delR < candDelR) {
       	  charmJet=j;
       	  candDelR=delR;
       	}
       }
-      if(isinf(deltaR(charmJet.mom(),j_psi))){
+      if(isinf(deltaR(FourMomentum(charmJet.e(),
+      				   charmJet.px(),
+      				   charmJet.py(),
+      				   charmJet.pz()),j_psi))){
       	vetoEvent;
       }
       cutFlow["charmJetMatch"]++;
-      Jet parton=jets.at(0);
-      if(parton.pseudojet()==charmJet.pseudojet()){
-      	parton=jets.at(1);
+      // fastjet::PseudoJet parton=jets.at(0);
+      // if(parton.m2()==charmJet.m2()){
+      // 	parton=jets.at(1);
+      // }
+      fillJetHistos("Jet",charmJet,j_psi,*jetProj.clusterSeq(),weight); 
+      if(charmJet.pt() > 45*GeV && charmJet.pt() < 65*GeV){
+      	fillJetHistos("JetELo",charmJet,j_psi,*jetProj.clusterSeq(),weight); 
       }
-      if(!parton.pseudojet().has_structure()){
-	MSG_DEBUG("Warning: parton does not have associated PseudoJet structure, skipping Event");
-	vetoEvent;
+      else if(charmJet.pt() > 175*GeV){
+      	fillJetHistos("JetEHi",charmJet,j_psi,*jetProj.clusterSeq(),weight); 
       }
-      if(!charmJet.pseudojet().has_structure()){
-	MSG_DEBUG("Warning: charmJet does not have associated PseudoJet structure, skipping Event");
-	vetoEvent;
-      }
-      fillJetHistos("Jet",charmJet.pseudojet(),parton.pseudojet(),j_psi,*jetProj.clusterSeq(),weight); 
     }
-    
+
     /// Finalize
     void finalize() {
       cout<<"Cut flow"<<endl;
@@ -208,8 +209,6 @@ namespace Rivet {
       _histograms[key+"DeltaR"]		 = bookHisto1D(key+"DeltaR",50,0,jetR+0.1);
       _histograms[key+"Z"]		 = bookHisto1D(key+"Z",50,0,1.10);
       _histograms[key+"Dipolarity"]      = bookHisto1D(key+"Dipolarity" ,50,0.0,2);
-      _histograms[key+"PtnDeltaPhi"]     = bookHisto1D(key+"PtnDeltaPhi",50,0,2*PI);
-      _histograms[key+"DeltaPhi"]     = bookHisto1D(key+"DeltaPhi",50,0,2*PI);
 
       //Jet Pull to various axes
       _histograms[key+"PMag"]		 = bookHisto1D(key+"PMag" ,50,0,0.06);
@@ -217,6 +216,7 @@ namespace Rivet {
 
       // _histograms[key+"PMagJPsi"]	 = bookHisto1D(key+"PMagJPsi" ,50,0,0.06);
       // _histograms[key+"PThetaJPsi"]      = bookHisto1D(key+"PThetaJPsi" ,50,0.,PI);
+
       // _histograms[key+"PMagPtn"]	 = bookHisto1D(key+"PMagPtn" ,50,0,0.06);
       // _histograms[key+"PThetaPtn"]       = bookHisto1D(key+"PThetaPtn" ,50,0.,PI);
 
@@ -237,7 +237,7 @@ namespace Rivet {
       // }
     }
     void fillJetHistos(const string& key, const fastjet::PseudoJet& jet, 
-		       const fastjet::PseudoJet& parton , const FourMomentum& j_psi,
+		       /* const PseudoJet& parton ,*/ const FourMomentum& j_psi,
 		       const fastjet::ClusterSequence& clusterSeq, const double weight){
       // cout<<key<<endl;
       // dump4vec(jet);
@@ -265,8 +265,6 @@ namespace Rivet {
       // 	getAngle(parton.eta(),parton.phi(),pull.at(0),pull.at(1),theta);
       // 	_histograms[key+"PThetaPtn"]->fill(theta,weight);
       // }
-      _histograms[key+"PtnDeltaPhi"]->fill(mapAngle0To2Pi(j_psi.phi()-parton.phi()),weight);
-      _histograms[key+"DeltaPhi"]->fill(mapAngle0To2Pi(j_psi.phi()-jet.phi()),weight);
 
       _histograms[key+"Dipolarity"]->fill(Dipolarity(jet),weight);
       vector<double> tau_vals(3,-1.);
