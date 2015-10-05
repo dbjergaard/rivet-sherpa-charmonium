@@ -138,6 +138,6 @@ int main(int argc, char* argv[]) {
     nGenerated++;
   }
 
-  //pythia.stat();
+  pythia.stat();
   return 0;
 }

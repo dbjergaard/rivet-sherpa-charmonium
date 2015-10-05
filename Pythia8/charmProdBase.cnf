@@ -1,4 +1,4 @@
-Main:numberOfEvents = 25000
+Main:numberOfEvents = 1000
 
 Next:numberShowLHA = 1 ! print LHA information n times
 Next:numberShowInfo = 1 ! print event information n times
@@ -16,7 +16,7 @@ HadronLevel:Hadronize = off
 ! HardQCD:all = off
 ! SoftQCD:all = off
 ParticleDecays:mixB = off
-PhaseSpace:pTHatMin = 45
+PhaseSpace:pTHatMin = 1
 PhaseSpace:pTHatMinDiverge = 0.5
 
 443:onMode = off

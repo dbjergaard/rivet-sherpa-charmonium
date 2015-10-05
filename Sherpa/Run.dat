@@ -8,21 +8,22 @@
   %me generator settings
   ME_SIGNAL_GENERATOR Internal;
   MI_HANDLER = None
-  EVENTS=200000
+  EVENTS=10000
   ANALYSIS=Rivet
+  ANALYSIS_OUTPUT=RivetCHARMID
 }(run)
 
 (processes){
-  Process 93 93 -> 93 443
+  Process 93 93 -> 93 CHARMID
   End process;
 }(processes)
 
 (selector){
-  PT 93 45.0 E_CMS
+  PT 93 1 E_CMS
 }(selector)
 
 (analysis){
   BEGIN_RIVET {
-     -a MC_GENSTUDY_CHARMONIUM 
+     -a MC_GENSTUDY_JPSI_VEC ATLAS_2011_S9035664
   } END_RIVET
 }(analysis)

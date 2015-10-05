@@ -36,12 +36,12 @@ template <typename lvec> static void dump4vec(lvec four_mom){
 }
 namespace Rivet {
   /// Generic analysis looking at various distributions of final state particles
-  class MC_GENSTUDY_CHARMONIUM : public Analysis {
+  class MC_GENSTUDY_JPSI_VEC : public Analysis {
   public:
 
     /// Constructor
-    MC_GENSTUDY_CHARMONIUM()
-      : Analysis("MC_GENSTUDY_CHARMONIUM"),
+    MC_GENSTUDY_JPSI_VEC()
+      : Analysis("MC_GENSTUDY_JPSI_VEC"),
 	jetR(0.4),
 	beta(1.0),
 	nPtBins(10),
@@ -201,5 +201,5 @@ namespace Rivet {
     const int binWidth;
   };
   // The hook for the plugin system
-  DECLARE_RIVET_PLUGIN(MC_GENSTUDY_CHARMONIUM);
+  DECLARE_RIVET_PLUGIN(MC_GENSTUDY_JPSI_VEC);
 }
