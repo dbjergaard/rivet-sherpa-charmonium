@@ -81,12 +81,17 @@ namespace Rivet {
       // Histograms
       // _histograms["JetMult"] = bookHisto1D("JetMult",8,-0.5,8.5);
 
-      _histograms["JPsiPt"] = bookHisto1D("JPsiPt" , 50, 0, 70);
+      _histograms["JPsiPt"] = bookHisto1D("JPsiPt" , 50, 0, 35);
       _histograms["JPsiM"] = bookHisto1D("JPsiM" , 50, 2.95, 3.2);
       _histograms["JPsiEta"] = bookHisto1D("JPsiEta" , 25, -4.2, 4.2);
       _histograms["JPsiRap"] = bookHisto1D("JPsiRap" , 25, -4.2, 4.2);
+      _histograms["PdgId"] = bookHisto1D("PdgId",5,0,4);
 
-
+      pdgIDMap[443]=0;
+      pdgIDMap[10441]=1;
+      pdgIDMap[20443]=2;
+      pdgIDMap[445]=3;
+      pdgIDMap[100443]=4;
       // bookJetHistos("Jet");
     }
 
@@ -98,7 +103,12 @@ namespace Rivet {
       const UnstableFinalState& ufs = applyProjection<UnstableFinalState>(event, "UFS");
       //fill j_psi histos
       foreach (const Particle& j_psi, ufs.particles()) {
-        if (j_psi.abspid() != 443) continue;
+        if (!(j_psi.abspid() == 443 || // J\psi
+	      j_psi.abspid() == 10441 || //Chi_0
+	      j_psi.abspid() == 20443 || //Chi_1
+	      j_psi.abspid() == 445 ||  //Chi_2
+	      j_psi.abspid() == 100443)) continue; //Psi(2S)
+	_histograms["PdgId"]->fill(pdgIDMap[j_psi.abspid()]);
 	_histograms["JPsiRap"]->fill(j_psi.rapidity(),weight);
 	_histograms["JPsiEta"]->fill(j_psi.eta(),weight);
 	_histograms["JPsiPt"]->fill(j_psi.pt(),weight);
@@ -197,6 +207,7 @@ namespace Rivet {
     BookedHistos _histograms;
     //@}
     std::map<std::string, size_t> cutFlow;
+    std::map<int, int> pdgIDMap;
     const int nPtBins;
     const int binWidth;
   };

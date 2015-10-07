@@ -1,0 +1,29 @@
+(run){
+  BEAM_1 = 2212; BEAM_ENERGY_1 = 3500;
+  BEAM_2 = 2212; BEAM_ENERGY_2 = 3500;
+
+  ALPHAS(MZ) 0.1188;
+  ORDER_ALPHAS 1;
+
+  %me generator settings
+  ME_SIGNAL_GENERATOR Internal;
+  MI_HANDLER = None
+  EVENTS=10000
+  ANALYSIS=Rivet
+  ANALYSIS_OUTPUT=RivetCHARMID
+}(run)
+
+(processes){
+  Process 21 21 -> 21 CHARMID
+  End process;
+}(processes)
+
+(selector){
+  PT CHARMID 1 E_CMS
+}(selector)
+
+(analysis){
+  BEGIN_RIVET {
+     -a MC_GENSTUDY_JPSI_VEC ATLAS_2011_S9035664
+  } END_RIVET
+}(analysis)

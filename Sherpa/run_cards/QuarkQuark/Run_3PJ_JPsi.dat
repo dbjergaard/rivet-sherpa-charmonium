@@ -10,16 +10,20 @@
   MI_HANDLER = None
   EVENTS=10000
   ANALYSIS=Rivet
-  ANALYSIS_OUTPUT=RivetCHARMID
+  ANALYSIS_OUTPUT=Rivet3PJ_JPsi
 }(run)
 
 (processes){
-  Process 93 93 -> 93 CHARMID
+  Process 94 94 -> 21 8100441
+  End process;
+  Process 94 94 -> 21 8200443
+  End process;
+  Process 94 94 -> 21 8300445
   End process;
 }(processes)
 
 (selector){
-  PT 93 1 E_CMS
+  PT 21 1 E_CMS
 }(selector)
 
 (analysis){
