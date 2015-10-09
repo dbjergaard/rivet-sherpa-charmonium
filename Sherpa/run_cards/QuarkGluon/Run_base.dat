@@ -16,6 +16,8 @@
 (processes){
   Process 94 21 -> 94 CHARMID
   End process;
+  Process 21 94 -> 94 CHARMID
+  End process;
 }(processes)
 
 (selector){

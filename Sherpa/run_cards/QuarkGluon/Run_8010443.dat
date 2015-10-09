@@ -16,6 +16,8 @@
 (processes){
   Process 94 21 -> 94 8010443
   End process;
+  Process 21 94 -> 94 8010443
+  End process;
 }(processes)
 
 (selector){

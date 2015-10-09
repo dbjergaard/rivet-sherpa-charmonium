@@ -11,6 +11,8 @@
   EVENTS=10000
   ANALYSIS=Rivet
   ANALYSIS_OUTPUT=Rivet3PJ1
+  % DH_STATUS[443]=0
+  % DH_STATUS[443,-13,13]=1
 }(run)
 
 (processes){
@@ -19,6 +21,12 @@
   Process 94 21 -> 94 20443
   End process;
   Process 94 21 -> 94 445
+  End process;
+  Process 21 94 -> 94 10441
+  End process;
+  Process 21 94 -> 94 20443
+  End process;
+  Process 21 94 -> 94 445
   End process;
 }(processes)
 

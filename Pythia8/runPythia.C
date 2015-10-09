@@ -98,8 +98,12 @@ int main(int argc, char* argv[]) {
   int iAbort = 0;
   int nGenerated=0;
   std::vector<int> requestedPdgId;//(3,0);
+  int pid=0;
+  bool keep=false;
   while(nGenerated < nRequested) {
-    requestedPdgId.clear();
+    pid=0;
+    keep=false;
+    // requestedPdgId.clear();
     if (!pythia.next()) {
       if (pythia.info.atEndOfFile()) {
 	cout << " Aborted since reached end of Les Houches Event File\n"; 
@@ -111,26 +115,20 @@ int main(int argc, char* argv[]) {
       break;
     }
     for(int i=0; i < pythia.event.size(); i++){
-      if(abs(pythia.event[i].id())==443 || abs(pythia.event[i].id())==13){
-	requestedPdgId.push_back(pythia.event[i].id());
-      }
-    }
-    if(!(contains(requestedPdgId, 443) && 
-	 contains(requestedPdgId, 13)  &&
-	 contains(requestedPdgId, -13))){
-      continue;
-    }
-    /*
-    for(int i=0; i < pythia.event.size(); i++){
-      if(abs(pythia.event[i].id())==9940003){
-	print_family_tree(pythia.event[i],pythia.event);
-	cout << endl  << endl;
+      pid=abs(pythia.event[i].id());
+      if(pid == 443 || // J\psi
+	 pid == 10441 || //Chi_0
+	 pid == 20443 || //Chi_1
+	 pid == 445 ||  //Chi_2
+	 pid == 100443
+	 /*pid ==13 */){
+	keep=true;
 	break;
       }
     }
-    */
-    // print_family_tree( pythia.event[1], pythia.event);
-
+    if(!keep){
+      continue;
+    }
     HepMC::GenEvent* hepmcevt = new HepMC::GenEvent(HepMC::Units::GEV, HepMC::Units::MM);
     ToHepMC.fill_next_event( pythia, hepmcevt );
     ascii_io << hepmcevt ;

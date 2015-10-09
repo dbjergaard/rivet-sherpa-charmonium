@@ -20,6 +20,12 @@
   End process;
   Process 94 21 -> 94 8310445
   End process;
+  Process 21 94 -> 94 8110441
+  End process;
+  Process 21 94 -> 94 8210443
+  End process;
+  Process 21 94 -> 94 8310445
+  End process;
 }(processes)
 
 (selector){
