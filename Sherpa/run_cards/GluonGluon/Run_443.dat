@@ -8,10 +8,20 @@
   %me generator settings
   ME_SIGNAL_GENERATOR Internal;
   MI_HANDLER = None
-  EVENTS=10000
+  EVENTS=10
   ANALYSIS=Rivet
   ANALYSIS_OUTPUT=Rivet443
 }(run)
+
+(ldme){
+  443=1.16
+}(ldme)
+
+(decays){
+  DISABLED = 443 10443;
+  ENABLED[443,13,-13]=1;
+  ENABLED[443,11,-11]=1;
+}{decays}
 
 (processes){
   Process 21 21 -> 21 443
