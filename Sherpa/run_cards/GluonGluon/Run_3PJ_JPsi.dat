@@ -16,10 +16,10 @@
 (processes){
   Process 21 21 -> 21 8100441
   End process;
-  % Process 21 21 -> 21 8200443
-  % End process;
-  % Process 21 21 -> 21 8300445
-  % End process;
+  Process 21 21 -> 21 8200443
+  End process;
+  Process 21 21 -> 21 8300445
+  End process;
 }(processes)
 
 (selector){
