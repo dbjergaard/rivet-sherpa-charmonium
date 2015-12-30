@@ -32,6 +32,6 @@ libBOOSTFastJets.so: src/BOOSTFastJets.cxx
 	$(CC)  -shared -fPIC $(CFLAGS) $< -o $@ -lfastjet -lfastjettools $(LDFLAGS)
 # Cleaning and installing rules
 install:
-	cp libBOOSTFastJets.so $(LIBDIR)
+	cp *.so $(LIBDIR)
 clean:
 	-rm -f *.o  *.so 
