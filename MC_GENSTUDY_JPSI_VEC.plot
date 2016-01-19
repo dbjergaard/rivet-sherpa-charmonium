@@ -18,6 +18,13 @@ Title=Transverse momentum of $J/$\psi$
 XLabel=$p_T$ [GeV]
 # END PLOT
 
+# BEGIN PLOT /MC_GENSTUDY_JPSI_VEC/PdgId$
+Title=Flavor Fraction
+NormalizeToSum=1
+XCustomMajorTicks=0.4	J/$\psi$	1.2	$\psi(2S)$	2.0	$\chi_0$	2.8	$\chi_1$	3.6	"$\chi_2$"
+XLabel=flavor
+# END PLOT
+
 # BEGIN PLOT /MC_GENSTUDY_JPSI_VEC/JPsiM$
 LogY=1
 Title=Mass of $J/$\psi$
